@@ -1,0 +1,49 @@
+{
+  "name": "ocaml-merlin",
+  "main": "./lib/main",
+  "version": "0.0.0",
+  "description": "Linting and autocompletion for Ocaml with Merlin.",
+  "keywords": [
+    "linter",
+    "autocomplete",
+    "goto",
+    "ocaml",
+    "merlin"
+  ],
+  "activationHooks": [
+    "language-ocaml:grammar-used"
+  ],
+  "repository": "https://github.com/314eter/atom-ocaml-merlin",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "text-buffer": "^8.4.6"
+  },
+  "providedServices": {
+    "linter": {
+      "versions": {
+        "1.0.0": "provideLinter"
+      }
+    },
+    "autocomplete.provider": {
+      "versions": {
+        "2.0.0": "provideAutocomplete"
+      }
+    }
+  },
+  "configSchema": {
+    "merlinPath": {
+      "type": "string",
+      "default": "ocamlmerlin"
+    },
+    "merlinArguments": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
