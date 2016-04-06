@@ -131,29 +131,36 @@ module.exports =
     @subscriptions.dispose()
     buffer.destroy() for _, buffer of @buffers
 
+  getPrefix: (editor, point) ->
+    line = editor.getTextInBufferRange([[point.row, 0], point])
+    line.match(/[^\s\[\](){}<>,+*\/-]*$/)[0]
+
   provideAutocomplete: ->
     kindToType =
-      "value": "value"
-      "variant": "variable"
-      "constructor": "function"
-      "label": "tag"
-      "module": "class"
-      "signature": "type"
-      "type": "type"
-      "method": "method"
-      "#": "method"
-      "exn": "constant"
-      "class": "class"
+      "Value": "value"
+      "Variant": "variable"
+      "Constructor": "class"
+      "Label": "keyword"
+      "Module": "method"
+      "Signature": "type"
+      "Type": "type"
+      "Method": "property"
+      "#": "constant"
+      "Exn": "keyword"
+      "Class": "class"
     selector: '.source.ocaml'
-    getSuggestions: ({editor, bufferPosition, prefix}) =>
+    getSuggestions: ({editor, bufferPosition}) =>
+      prefix = @getPrefix editor, bufferPosition
+      return [] if prefix.length == 0
       @merlin.complete @getBuffer(editor), bufferPosition, prefix
       .then (entries) ->
         entries.map ({name, kind, desc, info}) ->
           text: name
+          replacementPrefix: prefix
           type: kindToType[kind]
           leftLabel: kind
           rightLabel: desc
-          description: if info.length then desc + '\n' + info else desc
+          description: if info.length then info else desc
     inclusionPriority: 1
     excludeLowerPriority: true
 
