@@ -3,6 +3,7 @@
 Merlin = null
 Buffer = null
 TypeView = null
+SelectionView = null
 
 module.exports =
   merlin: null
@@ -10,19 +11,18 @@ module.exports =
   buffers: {}
 
   typeView: null
+  selectionView: null
 
   occurrences: null
 
   returnToFile: null
   returnToPoint: null
 
-  selections: null
-  selectionIndex: null
-
   activate: (state) ->
     Merlin = require './merlin'
     Buffer = require './buffer'
     TypeView = require './type-view'
+    SelectionView = require './selection-view'
 
     @merlin = new Merlin
 
@@ -47,8 +47,8 @@ module.exports =
       'ocaml-merlin:go-to-declaration': => @goToDeclaration('ml')
       'ocaml-merlin:go-to-type-declaration': => @goToDeclaration('mli')
       'ocaml-merlin:return-from-declaration': => @returnFromDeclaration()
-      'ocaml-merlin:shrink-selection': => @getSelection(-1)
-      'ocaml-merlin:expand-selection': => @getSelection(1)
+      'ocaml-merlin:shrink-selection': => @shrinkSelection()
+      'ocaml-merlin:expand-selection': => @expandSelection()
 
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
       @subscriptions.add editor.observeGrammar (grammar) =>
@@ -113,19 +113,18 @@ module.exports =
     @returnToFile = null
     @returnToPoint = null
 
-  getSelection: (change) ->
+  getSelectionView: ->
+    return Promise.resolve(@selectionView) if @selectionView?.isAlive()
     return unless editor = atom.workspace.getActiveTextEditor()
-    selection = editor.getSelectedBufferRange()
     @merlin.enclosing @getBuffer(editor), editor.getCursorBufferPosition()
-    .then (ranges) ->
-      index = ranges.findIndex (range) -> range.containsRange selection
-      range = if ranges[index].isEqual selection
-        ranges[index + change]
-      else if change > 0
-        ranges[index + change - 1]
-      else
-        ranges[index + change]
-      editor.setSelectedBufferRange range if range?
+    .then (ranges) =>
+      @selectionView ?= new SelectionView editor, ranges
+
+  shrinkSelection: ->
+    @getSelectionView().then (selectionView) -> selectionView.shrink()
+
+  expandSelection: ->
+    @getSelectionView().then (selectionView) -> selectionView.expand()
 
   deactivate: ->
     @merlin.close()
