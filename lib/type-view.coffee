@@ -1,6 +1,6 @@
 module.exports = class TypeView
   @typeList: null
-  @typeIndex: 0
+  @typeIndex: null
 
   @editor: null
   @marker: null
@@ -28,7 +28,7 @@ module.exports = class TypeView
     @show()
 
   shrink: ->
-    return unless @typeindex > 0
+    return unless @typeIndex > 0
     @typeIndex -= 1
     @show()
 
