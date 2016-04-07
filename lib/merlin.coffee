@@ -6,8 +6,11 @@ module.exports = class Merlin
   process: null
   interface: null
 
+  queue: null
+
   constructor: ->
     @restart()
+    @queue = Promise.resolve()
 
   restart: ->
     path = atom.config.get('ocaml-merlin.merlinPath')
@@ -28,16 +31,17 @@ module.exports = class Merlin
     @process?.kill()
 
   query: (buffer, query) ->
-    new Promise (resolve, reject) =>
-      jsonQuery = JSON.stringify
-        context: ["auto", buffer.getPath()]
-        query: query
-      @interface.question jsonQuery + '\n', (answer) ->
-        [kind, payload] = JSON.parse(answer)
-        if kind == "return"
-          resolve payload
-        else
-          reject Error(answer)
+    @queue = @queue.then =>
+      new Promise (resolve, reject) =>
+        jsonQuery = JSON.stringify
+          context: ["auto", buffer.getPath()]
+          query: query
+        @interface.question jsonQuery + '\n', (answer) ->
+          [kind, payload] = JSON.parse(answer)
+          if kind == "return"
+            resolve payload
+          else
+            reject Error(answer)
 
   position: (point) ->
     point = Point.fromObject point
