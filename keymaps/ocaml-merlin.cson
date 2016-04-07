@@ -1,2 +1,14 @@
 'atom-text-editor[data-grammar="source ocaml"]':
   'escape': 'ocaml-merlin:close-bubble'
+
+'.platform-linux atom-text-editor[data-grammar="source ocaml"]':
+  'ctrl-alt-down': 'ocaml-merlin:go-to-declaration'
+  'ctrl-alt-up': 'ocaml-merlin:return-from-declaration'
+
+'.platform-win32 atom-text-editor[data-grammar="source ocaml"]':
+  'ctrl-alt-down': 'ocaml-merlin:go-to-declaration'
+  'ctrl-alt-up': 'ocaml-merlin:return-from-declaration'
+
+'.platform-darwin atom-text-editor[data-grammar="source ocaml"]':
+  'cmd-alt-down': 'ocaml-merlin:go-to-declaration'
+  'cmd-alt-up': 'ocaml-merlin:return-from-declaration'
