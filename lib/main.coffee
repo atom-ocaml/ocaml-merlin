@@ -29,12 +29,10 @@ module.exports =
     @subscriptions = new CompositeDisposable
 
     @subscriptions.add atom.config.onDidChange 'ocaml-merlin.merlinPath', =>
-      buffer.setChanged true for _, buffer of @buffers
-      @merlin.restart()
+      @restartMerlin()
 
     @subscriptions.add atom.config.onDidChange 'ocaml-merlin.merlinArguments',=>
-      buffer.setChanged true for _, buffer of @buffers
-      @merlin.restart()
+      @restartMerlin()
 
     target = 'atom-text-editor[data-grammar="source ocaml"]'
     @subscriptions.add atom.commands.add target,
@@ -49,6 +47,7 @@ module.exports =
       'ocaml-merlin:return-from-declaration': => @returnFromDeclaration()
       'ocaml-merlin:shrink-selection': => @shrinkSelection()
       'ocaml-merlin:expand-selection': => @expandSelection()
+      'ocaml-merlin:restart-merlin': => @restartMerlin()
 
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
       @subscriptions.add editor.observeGrammar (grammar) =>
@@ -59,6 +58,10 @@ module.exports =
       @subscriptions.add editor.onDidDestroy =>
         delete @typeViews[editor.id]
         delete @selectionViews[editor.id]
+
+  restartMerlin: ->
+    buffer.setChanged true for _, buffer of @buffers
+    @merlin.restart()
 
   addBuffer: (textBuffer) ->
     bufferId = textBuffer.getId()
