@@ -187,7 +187,7 @@ module.exports =
     name: 'OCaml Merlin'
     grammarScopes: ['source.ocaml']
     scope: 'file'
-    lintOnFly: false
+    lintOnFly: true
     lint: (editor) =>
       @merlin.errors @getBuffer(editor)
       .then (errors) ->
