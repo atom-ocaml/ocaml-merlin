@@ -11,7 +11,7 @@ module.exports = class SelectionView
     @alive = true
     currentRange = @editor.getSelectedBufferRange()
     @rangeIndex = rangeList.findIndex (range) ->
-      range.containsRange currentrange
+      range.containsRange currentRange
     if not @rangeList[@rangeIndex].isEqual currentRange
       @rangeIndex -= 0.5
     @subscription =

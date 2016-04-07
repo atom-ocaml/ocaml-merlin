@@ -10,8 +10,8 @@ module.exports =
   subscriptions: null
   buffers: {}
 
-  typeView: null
-  selectionView: null
+  typeViews: {}
+  selectionViews: {}
 
   occurrences: null
 
@@ -39,9 +39,9 @@ module.exports =
     target = 'atom-text-editor[data-grammar="source ocaml"]'
     @subscriptions.add atom.commands.add target,
       'ocaml-merlin:show-type': => @showType()
-      'ocaml-merlin:shrink-type': => @typeView?.shrink()
-      'ocaml-merlin:expand-type': => @typeView?.expand()
-      'ocaml-merlin:close-bubble': => @typeView?.destroy()
+      'ocaml-merlin:shrink-type': => @shrinkType()
+      'ocaml-merlin:expand-type': => @expandType()
+      'ocaml-merlin:close-bubble': => @closeType()
       'ocaml-merlin:next-occurrence': => @getOccurrence(1)
       'ocaml-merlin:previous-occurrence': => @getOccurrence(-1)
       'ocaml-merlin:go-to-declaration': => @goToDeclaration('ml')
@@ -56,6 +56,9 @@ module.exports =
           @addBuffer editor.getBuffer()
         else
           @removeBuffer editor.getBuffer()
+      @subscriptions.add editor.onDidDestroy =>
+        delete @typeViews[editor.id]
+        delete @selectionViews[editor.id]
 
   addBuffer: (textBuffer) ->
     bufferId = textBuffer.getId()
@@ -70,12 +73,26 @@ module.exports =
 
   showType: ->
     return unless editor = atom.workspace.getActiveTextEditor()
+    @typeViews[editor.id]?.destroy()
     @merlin.type @getBuffer(editor), editor.getCursorBufferPosition()
     .then (typeList) =>
-      @typeView?.destroy()
       return unless typeList.length
-      @typeView = new TypeView typeList, editor
-      @typeView.show()
+      typeView = new TypeView typeList, editor
+      typeView.show()
+      @typeViews[editor.id] = typeView
+
+  shrinkType: ->
+    return unless editor = atom.workspace.getActiveTextEditor()
+    @typeViews[editor.id]?.shrink()
+
+  expandType: ->
+    return unless editor = atom.workspace.getActiveTextEditor()
+    @typeViews[editor.id]?.expand()
+
+  closeType: ->
+    return unless editor = atom.workspace.getActiveTextEditor()
+    @typeViews[editor.id]?.destroy()
+    delete @typeViews[editor.id]
 
   getOccurrence: (offset) ->
     return unless editor = atom.workspace.getActiveTextEditor()
@@ -114,11 +131,13 @@ module.exports =
     @returnToPoint = null
 
   getSelectionView: ->
-    return Promise.resolve(@selectionView) if @selectionView?.isAlive()
     return unless editor = atom.workspace.getActiveTextEditor()
+    selectionView = @selectionViews[editor.id]
+    return Promise.resolve(selectionView) if selectionView?.isAlive()
     @merlin.enclosing @getBuffer(editor), editor.getCursorBufferPosition()
     .then (ranges) =>
-      @selectionView ?= new SelectionView editor, ranges
+      selectionView = new SelectionView editor, ranges
+      @selectionViews[editor.id] = selectionView
 
   shrinkSelection: ->
     @getSelectionView().then (selectionView) -> selectionView.shrink()
