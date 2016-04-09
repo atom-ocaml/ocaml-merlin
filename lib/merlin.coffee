@@ -1,6 +1,6 @@
 {spawn} = require 'child_process'
 {createInterface} = require 'readline'
-{Point, Range} = require 'text-buffer'
+{Point, Range} = require 'atom'
 
 module.exports = class Merlin
   process: null
