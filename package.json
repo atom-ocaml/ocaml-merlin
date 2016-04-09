@@ -45,6 +45,10 @@
     "lintAsYouType": {
       "type": "boolean",
       "default": true
+    },
+    "useFuzzyCompletion": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

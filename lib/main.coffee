@@ -174,10 +174,14 @@ module.exports =
     getSuggestions: ({editor, bufferPosition}) =>
       prefix = @getPrefix editor, bufferPosition
       return [] if prefix.length == 0
-      index = prefix.lastIndexOf "."
-      replacement = if index >= 0 then prefix.substr(index + 1) else prefix
-      @merlin.complete @getBuffer(editor), bufferPosition, prefix
-      .then (entries) ->
+      replacement = prefix
+      promise = if atom.config.get "ocaml-merlin.completePartialPrefixes"
+        @merlin.expand @getBuffer(editor), bufferPosition, prefix
+      else
+        index = prefix.lastIndexOf "."
+        replacement = prefix.substr(index + 1) if index >= 0
+        @merlin.complete @getBuffer(editor), bufferPosition, prefix
+      promise.then (entries) ->
         entries.map ({name, kind, desc, info}) ->
           text: name
           replacementPrefix: replacement

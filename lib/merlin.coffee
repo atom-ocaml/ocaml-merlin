@@ -70,7 +70,15 @@ module.exports = class Merlin
 
   complete: (buffer, point, prefix) ->
     @sync(buffer).then =>
-      @query buffer, ["complete", "prefix", prefix, "at", @position point]
+      @query buffer, ["complete", "prefix", prefix,
+                      "at", @position point, "with", "doc"]
+      .then ({entries}) ->
+        entries
+
+  expand: (buffer, point, prefix) ->
+    @sync(buffer).then =>
+      @query buffer, ["expand", "prefix", prefix,
+                      "at", @position point]
       .then ({entries}) ->
         entries
 
