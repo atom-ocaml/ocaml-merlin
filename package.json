@@ -41,6 +41,10 @@
       "items": {
         "type": "string"
       }
+    },
+    "lintAsYouType": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

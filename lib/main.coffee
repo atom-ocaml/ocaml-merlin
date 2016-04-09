@@ -192,7 +192,7 @@ module.exports =
     name: 'OCaml Merlin'
     grammarScopes: ['source.ocaml']
     scope: 'file'
-    lintOnFly: true
+    lintOnFly: atom.config.get 'ocaml-merlin.lintAsYouType'
     lint: (editor) =>
       @merlin.errors @getBuffer(editor)
       .then (errors) ->
