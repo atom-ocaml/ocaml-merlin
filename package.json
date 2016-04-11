@@ -46,7 +46,7 @@
       "type": "boolean",
       "default": true
     },
-    "useFuzzyCompletion": {
+    "completePartialPrefixes": {
       "type": "boolean",
       "default": false
     }
