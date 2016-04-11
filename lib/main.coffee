@@ -31,7 +31,7 @@ module.exports =
     @subscriptions.add atom.config.onDidChange 'ocaml-merlin.merlinPath', =>
       @restartMerlin()
 
-    @subscriptions.add atom.config.onDidChange 'ocaml-merlin.merlinArguments',=>
+    @subscriptions.add atom.config.onDidChange 'ocaml-merlin.merlinArguments', =>
       @restartMerlin()
 
     target = 'atom-text-editor[data-grammar="source ocaml"]'
@@ -51,7 +51,7 @@ module.exports =
 
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
       @subscriptions.add editor.observeGrammar (grammar) =>
-        if grammar.scopeName == 'source.ocaml'
+        if grammar.scopeName is 'source.ocaml'
           @addBuffer editor.getBuffer()
         else
           @removeBuffer editor.getBuffer()
@@ -173,7 +173,7 @@ module.exports =
     selector: '.source.ocaml'
     getSuggestions: ({editor, bufferPosition}) =>
       prefix = @getPrefix editor, bufferPosition
-      return [] if prefix.length == 0
+      return [] if prefix.length is 0
       replacement = prefix
       promise = if atom.config.get "ocaml-merlin.completePartialPrefixes"
         @merlin.expand @getBuffer(editor), bufferPosition, prefix
@@ -201,8 +201,8 @@ module.exports =
       @merlin.errors @getBuffer(editor)
       .then (errors) ->
         errors.map ({range, type, message}) ->
-          type: if type == 'warning' then 'Warning' else 'Error'
+          type: if type is 'warning' then 'Warning' else 'Error'
           text: message
           filePath: editor.getPath()
           range: range
-          severity: if type == 'warning' then 'warning' else 'error'
+          severity: if type is 'warning' then 'warning' else 'error'

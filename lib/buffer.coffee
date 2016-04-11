@@ -4,7 +4,7 @@ module.exports = class Buffer
   constructor: (@buffer, @destroyCallback) ->
     @subscriptions = new CompositeDisposable
     @subscriptions.add @buffer.onDidDestroy @destroyCallback
-    @subscriptions.add @buffer.onDidChange () =>
+    @subscriptions.add @buffer.onDidChange =>
       @changed = true
     @changed = true
 

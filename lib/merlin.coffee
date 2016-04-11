@@ -38,7 +38,7 @@ module.exports = class Merlin
           query: query
         @interface.question jsonQuery + '\n', (answer) ->
           [kind, payload] = JSON.parse(answer)
-          if kind == "return"
+          if kind is "return"
             resolve payload
           else
             reject Error(answer)
@@ -94,7 +94,7 @@ module.exports = class Merlin
       @query buffer, ["locate", null, kind, "at", @position point]
       .then (result) =>
         new Promise (resolve, reject) =>
-          if typeof result == 'string'
+          if typeof result is 'string'
             reject result
           else
             resolve

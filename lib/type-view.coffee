@@ -38,7 +38,7 @@ module.exports = class TypeView
     bubble.className = 'transparent'
     bubble.textContent = type
     bubble.addEventListener 'keydown', ({keyCode}) =>
-      @destroy() if keyCode == 27
+      @destroy() if keyCode is 27
     bubble
 
   destroy: ->

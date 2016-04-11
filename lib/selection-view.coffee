@@ -19,7 +19,7 @@ module.exports = class SelectionView
         return if newBufferRange.isEqual @rangeList[@rangeIndex]
         @rangeIndex = @rangeList.findIndex (range) ->
           range.isEqual(newBufferRange)
-        @destroy() if @rangeIndex == -1
+        @destroy() if @rangeIndex is -1
 
   expand: ->
     newIndex = Math.floor @rangeIndex + 1
