@@ -15,8 +15,7 @@ module.exports =
 
   occurrences: null
 
-  returnToFile: null
-  returnToPoint: null
+  positions: []
 
   activate: (state) ->
     Merlin = require './merlin'
@@ -108,10 +107,12 @@ module.exports =
 
   goToDeclaration: (kind) ->
     return unless editor = atom.workspace.getActiveTextEditor()
-    @returnToFile = editor.getPath()
-    @returnToPoint = editor.getCursorBufferPosition()
-    @merlin.locate @getBuffer(editor), @returnToPoint, kind
+    currentPoint = editor.getCursorBufferPosition()
+    @merlin.locate @getBuffer(editor), currentPoint, kind
     .then ({file, point}) ->
+      @positions.push
+        file: editor.getPath()
+        point: currentPoint
       if file?
         atom.workspace.open file,
           initialLine: point.row
@@ -124,14 +125,12 @@ module.exports =
       atom.workspace.notificationManager.addError reason
 
   returnFromDeclaration: ->
-    return unless @returnToFile?
-    atom.workspace.open @returnToFile,
-      initialLine: @returnToPoint.row
-      initialColumn: @returnToPoint.column
+    return unless {file, point} = @positions.pop()
+    atom.workspace.open file,
+      initialLine: point.row
+      initialColumn: point.column
       pending: true
       searchAllPanes: true
-    @returnToFile = null
-    @returnToPoint = null
 
   getSelectionView: ->
     return unless editor = atom.workspace.getActiveTextEditor()
