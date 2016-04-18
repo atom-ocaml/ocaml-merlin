@@ -4,6 +4,7 @@ Merlin = null
 Buffer = null
 TypeView = null
 SelectionView = null
+RenameView = null
 
 module.exports =
   merlin: null
@@ -46,6 +47,7 @@ module.exports =
       'ocaml-merlin:return-from-declaration': => @returnFromDeclaration()
       'ocaml-merlin:shrink-selection': => @shrinkSelection()
       'ocaml-merlin:expand-selection': => @expandSelection()
+      'ocaml-merlin:rename': => @rename()
       'ocaml-merlin:restart-merlin': => @restartMerlin()
 
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
@@ -146,6 +148,19 @@ module.exports =
 
   expandSelection: ->
     @getSelectionView().then (selectionView) -> selectionView.expand()
+
+  renameView: (name, callback) ->
+    RenameView ?= require './rename-view'
+    new RenameView {name, callback}
+
+  rename: ->
+    return unless editor = atom.workspace.getActiveTextEditor()
+    @merlin.occurrences @getBuffer(editor), editor.getCursorBufferPosition()
+    .then (ranges) =>
+      currentName = editor.getTextInBufferRange ranges[0]
+      @renameView currentName, (newName) ->
+        ranges.map (range) ->
+          editor.setTextInBufferRange range, newName
 
   deactivate: ->
     @merlin.close()
