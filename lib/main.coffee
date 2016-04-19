@@ -52,7 +52,7 @@ module.exports =
 
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
       @subscriptions.add editor.observeGrammar (grammar) =>
-        if grammar.scopeName is 'source.ocaml'
+        if ['source.ocaml', 'source.ocamllex', 'source.ocamlyacc'].includes(grammar.scopeName)
           @addBuffer editor.getBuffer()
         else
           @removeBuffer editor.getBuffer()
@@ -185,7 +185,7 @@ module.exports =
       "#": "constant"
       "Exn": "keyword"
       "Class": "class"
-    selector: '.source.ocaml'
+    selector: '.source.ocaml, .source.ocamllex, .source.ocamlyacc'
     getSuggestions: ({editor, bufferPosition}) =>
       prefix = @getPrefix editor, bufferPosition
       return [] if prefix.length is 0
