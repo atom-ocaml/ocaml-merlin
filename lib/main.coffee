@@ -159,8 +159,9 @@ module.exports =
     .then (ranges) =>
       currentName = editor.getTextInBufferRange ranges[0]
       @renameView currentName, (newName) ->
-        ranges.map (range) ->
-          editor.setTextInBufferRange range, newName
+        editor.transact ->
+          ranges.map (range) ->
+            editor.setTextInBufferRange range, newName
 
   deactivate: ->
     @merlin.close()
