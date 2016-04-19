@@ -19,6 +19,7 @@ Linting is performed on save by [linter]. Autocompletion is performed on the fly
 | `ocaml-merlin:return-from-declaration` | Go back to expression                  | <kbd>ctrl-alt-up</kbd>      | <kbd>cmd-alt-up</kbd>   |
 | `ocaml-merlin:shrink-selection`        | Shrink the current selection           |                             |                         |
 | `ocaml-merlin:expand-selection`        | Expand the current selection           |                             |                         |
+| `ocaml-merlin:rename-variable`         | Rename all occurrences of variable     |                             |                         |
 
 
 ## Installation
