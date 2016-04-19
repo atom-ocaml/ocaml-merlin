@@ -52,7 +52,7 @@ module.exports =
 
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
       @subscriptions.add editor.observeGrammar (grammar) =>
-        if ['source.ocaml', 'source.ocamllex', 'source.ocamlyacc'].includes(grammar.scopeName)
+        if ['source.ocaml', 'source.ocamllex', 'source.ocamlyacc'].includes grammar.scopeName
           @addBuffer editor.getBuffer()
         else
           @removeBuffer editor.getBuffer()
