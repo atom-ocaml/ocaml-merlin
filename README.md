@@ -3,9 +3,20 @@
 _Use [ocamlmerlin] to autocomplete, lint and navigate your OCaml code in Atom._
 
 
+## Features
+
+* Context-sensitive autocompletion and linting
+* Show the type of expressions under the cursor
+* Find all occurrences of a variable
+* Jump to (type) declarations and back
+* Shrink and grow selections in a smart way
+* Rename all occurrences of a variable in a file
+
 ## Usage
 
 Linting is performed on save by [linter]. Autocompletion is performed on the fly by [autocomplete-plus].
+
+No default keybindings are provided, except those compatible with the `symbols-view` package. Additional keybindings can be set in your keymap.
 
 | Command                                | Description                            | Keybinding (Linux, Windows) | Keybinding (OS X)       |
 | -------------------------------------- | -------------------------------------- | --------------------------- | ----------------------- |
