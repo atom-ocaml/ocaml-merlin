@@ -111,7 +111,7 @@ module.exports =
     return unless editor = atom.workspace.getActiveTextEditor()
     currentPoint = editor.getCursorBufferPosition()
     @merlin.locate @getBuffer(editor), currentPoint, kind
-    .then ({file, point}) ->
+    .then ({file, point}) =>
       @positions.push
         file: editor.getPath()
         point: currentPoint
