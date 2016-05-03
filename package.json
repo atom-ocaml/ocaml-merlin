@@ -33,22 +33,71 @@
   "configSchema": {
     "merlinPath": {
       "type": "string",
-      "default": "ocamlmerlin"
-    },
-    "merlinArguments": {
-      "type": "array",
-      "default": [],
-      "items": {
-        "type": "string"
-      }
+      "default": "ocamlmerlin",
+      "order": 1
     },
     "lintAsYouType": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "order": 2
     },
     "completePartialPrefixes": {
+      "description": "For instance, `L.ma` can get expanded to `List.map`.",
       "type": "boolean",
-      "default": false
+      "default": false,
+      "order": 3
+    },
+    "default": {
+      "title": "Default settings if no .merlin file is found",
+      "type": "object",
+      "order": 4,
+      "properties": {
+        "flags": {
+          "title": "Flags",
+          "type": "array",
+          "default": [],
+          "order": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "packages": {
+          "title": "Packages",
+          "type": "array",
+          "default": [],
+          "order": 2,
+          "items": {
+            "type": "string"
+          }
+        },
+        "extensions": {
+          "title": "Extensions",
+          "type": "array",
+          "default": [],
+          "order": 3,
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourcePaths": {
+          "title": "Source Paths",
+          "type": "array",
+          "default": [],
+          "order": 4,
+          "items": {
+            "type": "string"
+          }
+        },
+        "buildPaths": {
+          "title": "Build Paths",
+          "type": "array",
+          "default": [],
+          "order": 5,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

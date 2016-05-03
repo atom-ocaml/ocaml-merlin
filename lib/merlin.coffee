@@ -13,11 +13,10 @@ module.exports = class Merlin
     @queue = Promise.resolve()
 
   restart: ->
-    path = atom.config.get('ocaml-merlin.merlinPath')
-    args = atom.config.get('ocaml-merlin.merlinArguments')
+    path = atom.config.get 'ocaml-merlin.merlinPath'
     @interface?.close()
     @process?.kill()
-    @process = spawn path, args
+    @process = spawn path
     @process.on 'error', (error) -> console.log error
     @process.on 'exit', (code) -> console.log "Merlin exited with code #{code}"
     console.log "Merlin process started, pid = #{@process.pid}"
@@ -58,6 +57,31 @@ module.exports = class Merlin
     buffer.setChanged false
     @query buffer, ["tell", "start", "at", @position([0, 0])]
     .then => @query buffer, ["tell", "source-eof", buffer.getText()]
+
+  setFlags: (buffer, flags) ->
+    @query buffer, ["flags", "set", flags]
+    .then ({failures}) ->
+      failures ? []
+
+  usePackages: (buffer, packages) ->
+    @query buffer, ["find", "use", packages]
+    .then ({failures}) ->
+      failures ? []
+
+  listPackages: (buffer) ->
+    @query buffer, ["find", "list"]
+
+  enableExtensions: (buffer, extensions) ->
+    @query buffer, ["extension", "enable", extensions]
+
+  listExtensions: (buffer) ->
+    @query buffer, ["extension", "list"]
+
+  addSourcePaths: (buffer, paths) ->
+    @query buffer, ["path", "add", "source", paths]
+
+  addBuildPaths: (buffer, paths) ->
+    @query buffer, ["path", "add", "build", paths]
 
   type: (buffer, point) ->
     @sync(buffer).then =>
@@ -116,3 +140,9 @@ module.exports = class Merlin
           range: if start? and end? then @range start, end else null
           type: type
           message: message
+
+  project: (buffer) ->
+    @query buffer, ["project", "get"]
+    .then ({result, failures}) ->
+      merlinFiles: result
+      failures: failures

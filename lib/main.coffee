@@ -31,9 +31,6 @@ module.exports =
     @subscriptions.add atom.config.onDidChange 'ocaml-merlin.merlinPath', =>
       @restartMerlin()
 
-    @subscriptions.add atom.config.onDidChange 'ocaml-merlin.merlinArguments', =>
-      @restartMerlin()
-
     target = 'atom-text-editor[data-grammar="source ocaml"]'
     @subscriptions.add atom.commands.add target,
       'ocaml-merlin:show-type': => @showType()
@@ -67,7 +64,21 @@ module.exports =
   addBuffer: (textBuffer) ->
     bufferId = textBuffer.getId()
     return if @buffers[bufferId]?
-    @buffers[bufferId] = new Buffer textBuffer, => delete @buffers[bufferId]
+    buffer = new Buffer textBuffer, => delete @buffers[bufferId]
+    @buffers[bufferId] = buffer
+    @merlin.project buffer
+    .then ({merlinFiles, failures}) =>
+      atom.workspace.notificationManager.addError failures.join '\n' if failures?
+      return if merlinFiles.length
+      @merlin.setFlags buffer, atom.config.get 'ocaml-merlin.default.flags'
+      .then ({failures}) ->
+        atom.workspace.notificationManager.addError failures.join '\n' if failures?
+      @merlin.usePackages buffer, atom.config.get 'ocaml-merlin.default.packages'
+      .then ({failures}) ->
+        atom.workspace.notificationManager.addError failures.join '\n' if failures?
+      @merlin.enableExtensions buffer, atom.config.get 'ocaml-merlin.default.extensions'
+      @merlin.addSourcePaths buffer, atom.config.get 'ocaml-merlin.default.sourcePaths'
+      @merlin.addBuildPaths buffer, atom.config.get 'ocaml-merlin.default.buildPaths'
 
   removeBuffer: (textBuffer) ->
     @buffers[textBuffer.getId()]?.destroy()
