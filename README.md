@@ -14,7 +14,7 @@ _Use [ocamlmerlin] to autocomplete, lint and navigate your OCaml code in Atom._
 
 ## Usage
 
-Linting is performed on save by [linter]. Autocompletion is performed on the fly by [autocomplete-plus].
+Linting is performed on save or while typing by [linter]. Autocompletion is performed on the fly by [autocomplete-plus].
 
 No default keybindings are provided, except those compatible with the `symbols-view` package. Additional keybindings can be set in your keymap.
 
