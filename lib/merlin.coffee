@@ -92,6 +92,14 @@ module.exports = class Merlin
           type: type
           tail: tail
 
+  destruct: (buffer, range) ->
+    @sync(buffer).then =>
+      @query buffer, ["case", "analysis", "from", @position(range.start),
+                      "to", @position(range.end)]
+      .then ([{start, end}, content]) =>
+        range: @range start, end
+        content: content
+
   complete: (buffer, point, prefix) ->
     @sync(buffer).then =>
       @query buffer, ["complete", "prefix", prefix,

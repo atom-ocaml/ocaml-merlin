@@ -1,4 +1,4 @@
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, Disposable} = require 'atom'
 
 Merlin = null
 Buffer = null
@@ -17,6 +17,8 @@ module.exports =
   occurrences: null
 
   positions: []
+
+  indentRange: null
 
   activate: (state) ->
     Merlin = require './merlin'
@@ -37,6 +39,7 @@ module.exports =
       'ocaml-merlin:shrink-type': => @shrinkType()
       'ocaml-merlin:expand-type': => @expandType()
       'ocaml-merlin:close-bubble': => @closeType()
+      'ocaml-merlin:destruct': => @destruct()
       'ocaml-merlin:next-occurrence': => @getOccurrence(1)
       'ocaml-merlin:previous-occurrence': => @getOccurrence(-1)
       'ocaml-merlin:go-to-declaration': => @goToDeclaration('ml')
@@ -108,6 +111,13 @@ module.exports =
     return unless editor = atom.workspace.getActiveTextEditor()
     @typeViews[editor.id]?.destroy()
     delete @typeViews[editor.id]
+
+  destruct: ->
+    return unless editor = atom.workspace.getActiveTextEditor()
+    @merlin.destruct @getBuffer(editor), editor.getSelectedBufferRange()
+    .then ({range, content}) =>
+      range = editor.setTextInBufferRange range, content
+      @indentRange editor, range if @indentRange?
 
   getOccurrence: (offset) ->
     return unless editor = atom.workspace.getActiveTextEditor()
@@ -232,3 +242,6 @@ module.exports =
           filePath: editor.getPath()
           range: range
           severity: if type is 'warning' then 'warning' else 'error'
+
+  consumeIndent: ({@indentRange}) ->
+    Disposable => @indentRange = null

@@ -1,6 +1,6 @@
 # ocaml-merlin
 
-_Use [ocamlmerlin] to autocomplete, lint and navigate your OCaml code in Atom._
+_Use [ocamlmerlin] to autocomplete, lint, refactor and navigate your OCaml code in Atom._
 
 
 ## Features
@@ -11,6 +11,8 @@ _Use [ocamlmerlin] to autocomplete, lint and navigate your OCaml code in Atom._
 * Jump to (type) declarations and back
 * Shrink and grow selections in a smart way
 * Rename all occurrences of a variable in a file
+* Destruct expressions in pattern matchings
+
 
 ## Usage
 
@@ -23,6 +25,7 @@ No default keybindings are provided, except those compatible with the `symbols-v
 | `ocaml-merlin:show-type`               | Show type of expression under cursor   |                             |                         |
 | `ocaml-merlin:shrink-type`             | Shrink the expression                  |                             |                         |
 | `ocaml-merlin:expand-type`             | Expand the expression                  |                             |                         |
+| `ocaml-merlin:destruct`                | Destruct expression under cursor       |                             |                         |
 | `ocaml-merlin:next-occurrence`         | Find next occurrence of expression     |                             |                         |
 | `ocaml-merlin:previous-occurrence`     | Find previous occurrence of expression |                             |                         |
 | `ocaml-merlin:go-to-declaration`       | Go to declaration of expression        | <kbd>ctrl-alt-down</kbd>    | <kbd>cmd-alt-down</kbd> |
@@ -35,7 +38,7 @@ No default keybindings are provided, except those compatible with the `symbols-v
 
 ## Installation
 
-This package requires [language-ocaml], [linter] and [ocamlmerlin].
+This package requires [language-ocaml], [linter] and [ocamlmerlin]. For auto-indenting destructed patterns, [ocaml-indent] is needed.
 
 ```sh
 apm install language-ocaml linter
@@ -46,3 +49,4 @@ opam install ocamlmerlin
 [linter]: https://atom.io/packages/linter
 [autocomplete-plus]: https://atom.io/packages/autocomplete-plus
 [language-ocaml]: https://atom.io/packages/language-ocaml
+[ocaml-indent]: https://atom.io/packages/ocaml-indent
