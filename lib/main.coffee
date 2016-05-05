@@ -116,8 +116,11 @@ module.exports =
     return unless editor = atom.workspace.getActiveTextEditor()
     @merlin.destruct @getBuffer(editor), editor.getSelectedBufferRange()
     .then ({range, content}) =>
-      range = editor.setTextInBufferRange range, content
-      @indentRange editor, range if @indentRange?
+      editor.transact 100, =>
+        range = editor.setTextInBufferRange range, content
+        @indentRange editor, range if @indentRange?
+    , ({message}) ->
+      atom.workspace.notificationManager.addError message
 
   getOccurrence: (offset) ->
     return unless editor = atom.workspace.getActiveTextEditor()

@@ -39,8 +39,8 @@ module.exports = class Merlin
           [kind, payload] = JSON.parse(answer)
           if kind is "return"
             resolve payload
-          else
-            reject Error(answer)
+          else if kind is "error"
+            reject payload
 
   position: (point) ->
     point = Point.fromObject point
