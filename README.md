@@ -41,7 +41,7 @@ No default keybindings are provided, except those compatible with the `symbols-v
 This package requires [language-ocaml], [linter] and [ocamlmerlin]. For auto-indenting destructed patterns, [ocaml-indent] is needed.
 
 ```sh
-apm install language-ocaml linter
+apm install language-ocaml linter ocaml-indent
 opam install ocamlmerlin
 ```
 
