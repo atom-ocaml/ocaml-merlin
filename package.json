@@ -1,7 +1,7 @@
 {
   "name": "ocaml-merlin",
   "main": "./lib/main",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Linting, autocompletion, type checking, refactoring and code navigation for Ocaml with Merlin.",
   "keywords": [
     "linter",
