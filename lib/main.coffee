@@ -240,11 +240,13 @@ module.exports =
       @merlin.errors @getBuffer(editor)
       .then (errors) ->
         errors.map ({range, type, message}) ->
-          type: if type is 'warning' then 'Warning' else 'Error'
-          text: message
+          severity = if type is 'warning' then 'warning' else 'error'
+          type: type[0].toUpperCase() + type[1..-1]
+          class: severity
+          text: message[0].toUpperCase() + message[1..-1]
           filePath: editor.getPath()
           range: range
-          severity: if type is 'warning' then 'warning' else 'error'
+          severity: severity
 
   consumeIndent: ({@indentRange}) ->
     Disposable => @indentRange = null
