@@ -197,6 +197,12 @@ module.exports =
     line.match(/[^\s\[\](){}<>,+*\/-]*$/)[0]
 
   provideAutocomplete: ->
+    minimumWordLength = 1
+    @subscriptions.add atom.config.observe "autocomplete-plus.minimumWordLength", (value) ->
+      minimumWordLength = value
+    completePartialPrefixes = false
+    @subscriptions.add atom.config.observe "ocaml-merlin.completePartialPrefixes", (value) ->
+      completePartialPrefixes = value
     kindToType =
       "Value": "value"
       "Variant": "variable"
@@ -210,16 +216,16 @@ module.exports =
       "Exn": "keyword"
       "Class": "class"
     selector: '.source.ocaml, .source.ocamllex, .source.ocamlyacc'
-    getSuggestions: ({editor, bufferPosition}) =>
+    getSuggestions: ({editor, bufferPosition, activatedManually}) =>
       prefix = @getPrefix editor, bufferPosition
-      return [] if prefix.length is 0
-      replacement = prefix
-      promise = if atom.config.get "ocaml-merlin.completePartialPrefixes"
-        @merlin.expand @getBuffer(editor), bufferPosition, prefix
+      return [] if prefix.length < (if activatedManually then 1 else minimumWordLength)
+      if completePartialPrefixes
+        replacement = prefix
+        promise = @merlin.expand @getBuffer(editor), bufferPosition, prefix
       else
         index = prefix.lastIndexOf "."
         replacement = prefix.substr(index + 1) if index >= 0
-        @merlin.complete @getBuffer(editor), bufferPosition, prefix
+        promise = @merlin.complete @getBuffer(editor), bufferPosition, prefix
       promise.then (entries) ->
         entries.map ({name, kind, desc, info}) ->
           text: name
