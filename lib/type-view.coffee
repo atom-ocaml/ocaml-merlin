@@ -21,6 +21,7 @@ module.exports = class TypeView
       type: 'highlight'
       class: 'ocaml-merlin-highlight'
     @subscription = @editor.onDidChangeCursorPosition => @destroy()
+    type
 
   expand: ->
     return unless @typeIndex + 1 < @typeList?.length ? 0

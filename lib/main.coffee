@@ -14,6 +14,8 @@ module.exports =
   typeViews: {}
   selectionViews: {}
 
+  latestType: null
+
   occurrences: null
 
   positions: []
@@ -39,6 +41,7 @@ module.exports =
       'ocaml-merlin:shrink-type': => @shrinkType()
       'ocaml-merlin:expand-type': => @expandType()
       'ocaml-merlin:close-bubble': => @closeType()
+      'ocaml-merlin:insert-latest-type': => @insertType()
       'ocaml-merlin:destruct': => @destruct()
       'ocaml-merlin:next-occurrence': => @getOccurrence(1)
       'ocaml-merlin:previous-occurrence': => @getOccurrence(-1)
@@ -96,21 +99,26 @@ module.exports =
     .then (typeList) =>
       return unless typeList.length
       typeView = new TypeView typeList, editor
-      typeView.show()
+      @latestType = typeView.show()
       @typeViews[editor.id] = typeView
 
   shrinkType: ->
     return unless editor = atom.workspace.getActiveTextEditor()
-    @typeViews[editor.id]?.shrink()
+    @latestType = @typeViews[editor.id]?.shrink()
 
   expandType: ->
     return unless editor = atom.workspace.getActiveTextEditor()
-    @typeViews[editor.id]?.expand()
+    @latestType = @typeViews[editor.id]?.expand()
 
   closeType: ->
     return unless editor = atom.workspace.getActiveTextEditor()
     @typeViews[editor.id]?.destroy()
     delete @typeViews[editor.id]
+
+  insertType: ->
+    return unless @latestType?
+    return unless editor = atom.workspace.getActiveTextEditor()
+    editor.insertText @latestType
 
   destruct: ->
     return unless editor = atom.workspace.getActiveTextEditor()
