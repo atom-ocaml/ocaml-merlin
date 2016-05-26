@@ -151,10 +151,10 @@ module.exports =
       atom.workspace.notificationManager.addError reason
 
   returnFromDeclaration: ->
-    return unless {file, point} = @positions.pop()
-    atom.workspace.open file,
-      initialLine: point.row
-      initialColumn: point.column
+    return unless position = @positions.pop()
+    atom.workspace.open position.file,
+      initialLine: position.point.row
+      initialColumn: position.point.column
       pending: true
       searchAllPanes: true
 
