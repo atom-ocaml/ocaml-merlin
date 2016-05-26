@@ -26,7 +26,8 @@ module.exports = class Merlin
       output: @process.stdin
       terminal: false
     @rawQuery ["protocol", "version", 2]
-    .then (=> @protocol = 2), (=> @protocol = 1)
+    .then ([kind, payload]) =>
+      @protocol = if kind is "return" then payload.selected else 1
 
   close: ->
     @interface?.close()
@@ -37,16 +38,14 @@ module.exports = class Merlin
       new Promise (resolve, reject) =>
         jsonQuery = JSON.stringify query
         @interface.question jsonQuery + '\n', (answer) ->
-          [kind, payload] = JSON.parse(answer)
-          if kind is "return"
-            resolve payload
-          else
-            reject payload
+          resolve JSON.parse(answer)
 
   query: (buffer, query) ->
     @rawQuery
       context: ["auto", buffer.getPath()]
       query: query
+    .then ([kind, payload]) ->
+      if kind is "return" then payload else Promise.reject payload
 
   position: (point) ->
     point = Point.fromObject point
