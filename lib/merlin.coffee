@@ -5,12 +5,13 @@
 module.exports = class Merlin
   process: null
   interface: null
+  protocol: 2
 
   queue: null
 
   constructor: ->
-    @restart()
     @queue = Promise.resolve()
+    @restart()
 
   restart: ->
     path = atom.config.get 'ocaml-merlin.merlinPath'
@@ -24,23 +25,28 @@ module.exports = class Merlin
       input: @process.stdout
       output: @process.stdin
       terminal: false
+    @rawQuery ["protocol", "version", 2]
+    .then (=> @protocol = 2), (=> @protocol = 1)
 
   close: ->
     @interface?.close()
     @process?.kill()
 
-  query: (buffer, query) ->
+  rawQuery: (query) ->
     @queue = @queue.then =>
       new Promise (resolve, reject) =>
-        jsonQuery = JSON.stringify
-          context: ["auto", buffer.getPath()]
-          query: query
+        jsonQuery = JSON.stringify query
         @interface.question jsonQuery + '\n', (answer) ->
           [kind, payload] = JSON.parse(answer)
           if kind is "return"
             resolve payload
-          else if kind is "error"
+          else
             reject payload
+
+  query: (buffer, query) ->
+    @rawQuery
+      context: ["auto", buffer.getPath()]
+      query: query
 
   position: (point) ->
     point = Point.fromObject point
@@ -55,8 +61,11 @@ module.exports = class Merlin
   sync: (buffer) ->
     return Promise.resolve(true) unless buffer.isChanged()
     buffer.setChanged false
-    @query buffer, ["tell", "start", "at", @position([0, 0])]
-    .then => @query buffer, ["tell", "source-eof", buffer.getText()]
+    if @protocol is 1
+      @query buffer, ["tell", "start", "at", @position([0, 0])]
+      .then => @query buffer, ["tell", "source-eof", buffer.getText()]
+    else if @protocol is 2
+      @query buffer, ["tell", "start", "end", buffer.getText()]
 
   setFlags: (buffer, flags) ->
     @query buffer, ["flags", "set", flags]
