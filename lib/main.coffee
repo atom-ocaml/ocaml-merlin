@@ -243,7 +243,6 @@ module.exports =
           rightLabel: desc
           description: if info.length then info else desc
     inclusionPriority: 1
-    excludeLowerPriority: true
 
   provideLinter: ->
     name: 'OCaml Merlin'
