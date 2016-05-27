@@ -42,7 +42,7 @@ This package requires [language-ocaml], [linter] and [ocamlmerlin]. For auto-ind
 
 ```sh
 apm install language-ocaml linter ocaml-indent
-opam install ocamlmerlin
+opam install merlin
 ```
 
 [ocamlmerlin]: https://github.com/the-lambda-church/merlin
