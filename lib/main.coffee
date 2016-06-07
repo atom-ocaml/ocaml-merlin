@@ -192,7 +192,7 @@ module.exports =
       currentName = editor.getTextInBufferRange ranges[0]
       @renameView currentName, (newName) ->
         editor.transact ->
-          ranges.map (range) ->
+          ranges.reverse().map (range) ->
             editor.setTextInBufferRange range, newName
 
   deactivate: ->
