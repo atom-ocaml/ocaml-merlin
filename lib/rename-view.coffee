@@ -6,7 +6,7 @@ module.exports = class RenameView extends View
       @label "Enter the new name for #{name}.", class: 'icon icon-arrow-right'
       @subview 'miniEditor', new TextEditorView mini: true
 
-  initialize: ({callback}) ->
+  initialize: ({name, callback}) ->
     atom.commands.add @element,
       'core:confirm': =>
         callback @miniEditor.getText()
@@ -16,6 +16,8 @@ module.exports = class RenameView extends View
     @miniEditor.on 'blur', =>
       @close() if document.hasFocus()
     @panel = atom.workspace.addModalPanel item: @element
+    @miniEditor.setText name
+    @miniEditor.getModel().selectAll()
     @miniEditor.focus()
 
   close: ->
