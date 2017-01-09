@@ -17,7 +17,9 @@ module.exports = class Merlin
     path = atom.config.get 'ocaml-merlin.merlinPath'
     @interface?.close()
     @process?.kill()
-    @process = spawn path
+
+    projectPaths = atom.project.getPaths()
+    @process = spawn path, [], cwd: if projectPaths.length > 0 then projectPaths[0] else __dirname
     @process.on 'error', (error) -> console.log error
     @process.on 'exit', (code) -> console.log "Merlin exited with code #{code}"
     console.log "Merlin process started, pid = #{@process.pid}"
