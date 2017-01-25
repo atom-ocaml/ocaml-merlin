@@ -158,8 +158,6 @@ module.exports = class Merlin
           range: if start? and end? then @range start, end else null
           type: type
           message: message
-            .replace /^([^]+?:)?\s*|\s+$/g, ""
-            .replace /\s{2,}/g, " "
 
   project: (buffer) ->
     @query buffer, ["project", "get"]
