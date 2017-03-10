@@ -12,7 +12,9 @@
   ],
   "activationHooks": [
     "language-ocaml:grammar-used",
-    "language-ocaml-fix:grammar-used"
+    "language-ocaml-fix:grammar-used",
+    "language-reason:grammar-used",
+    "nuclide-language-reason:grammar-used"
   ],
   "repository": "https://github.com/314eter/atom-ocaml-merlin",
   "license": "MIT",

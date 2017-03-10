@@ -1,5 +1,7 @@
 {CompositeDisposable, Disposable} = require 'atom'
 
+grammars = ['ocaml', 'ocamllex', 'ocamlyacc', 'reason']
+
 Merlin = null
 Buffer = null
 TypeView = null
@@ -35,7 +37,10 @@ module.exports =
     @subscriptions.add atom.config.onDidChange 'ocaml-merlin.merlinPath', =>
       @restartMerlin()
 
-    target = 'atom-text-editor[data-grammar="source ocaml"]'
+    target = grammars.map (grammar) ->
+      "atom-text-editor[data-grammar='source #{grammar}']"
+    .join ', '
+
     @subscriptions.add atom.commands.add target,
       'ocaml-merlin:show-type': => @showType()
       'ocaml-merlin:shrink-type': => @shrinkType()
@@ -55,7 +60,7 @@ module.exports =
 
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
       @subscriptions.add editor.observeGrammar (grammar) =>
-        if ['source.ocaml', 'source.ocamllex', 'source.ocamlyacc'].includes grammar.scopeName
+        if (grammars.map (grammar) -> "source.#{grammar}").includes grammar.scopeName
           @addBuffer editor.getBuffer()
         else
           @removeBuffer editor.getBuffer()
@@ -223,7 +228,7 @@ module.exports =
       "#": "constant"
       "Exn": "keyword"
       "Class": "class"
-    selector: '.source.ocaml, .source.ocamllex, .source.ocamlyacc'
+    selector: (grammars.map (grammar) -> ".source.#{grammar}").join ', '
     getSuggestions: ({editor, bufferPosition, activatedManually}) =>
       prefix = @getPrefix editor, bufferPosition
       return [] if prefix.length < (if activatedManually then 1 else minimumWordLength)
@@ -246,7 +251,7 @@ module.exports =
 
   provideLinter: ->
     name: 'OCaml Merlin'
-    grammarScopes: ['source.ocaml']
+    grammarScopes: (grammars.map (grammar) -> "source.#{grammar}")
     scope: 'file'
     lintOnFly: atom.config.get 'ocaml-merlin.lintAsYouType'
     lint: (editor) =>
