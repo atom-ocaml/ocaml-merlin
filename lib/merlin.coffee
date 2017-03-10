@@ -47,7 +47,13 @@ module.exports = class Merlin
       context: ["auto", buffer.getPath()]
       query: query
     .then ([kind, payload]) ->
-      if kind is "return" then payload else Promise.reject payload
+      new Promise (resolve, reject) ->
+        if kind is "return"
+          resolve payload
+        else if kind is "error"
+          reject payload.message
+        else
+          reject payload
 
   position: (point) ->
     point = Point.fromObject point
