@@ -247,6 +247,7 @@ module.exports =
           leftLabel: kind
           rightLabel: desc
           description: if info.length then info else desc
+    disableForSelector: (grammars.map (grammar) -> ".source.#{grammar} .comment").join ', '
     inclusionPriority: 1
 
   provideLinter: ->
