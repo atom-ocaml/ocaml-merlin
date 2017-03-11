@@ -1,6 +1,6 @@
 # ocaml-merlin
 
-_Use [ocamlmerlin] to autocomplete, lint, refactor and navigate your OCaml code in Atom._
+_Use [ocamlmerlin] to autocomplete, lint, refactor and navigate your OCaml/Reason code in Atom._
 
 
 ## Features
@@ -38,7 +38,7 @@ No default keybindings are provided, except those compatible with the `symbols-v
 
 ## Installation
 
-This package requires [language-ocaml], [linter] and [ocamlmerlin]. For auto-indenting destructed patterns, [ocaml-indent] is needed.
+This package requires [language-ocaml], [linter] and [ocamlmerlin]. For auto-indenting destructed patterns, [ocaml-indent] is needed. For Reason support, [language-reason] is needed.
 
 ```sh
 apm install language-ocaml linter ocaml-indent
@@ -49,4 +49,5 @@ opam install merlin
 [linter]: https://atom.io/packages/linter
 [autocomplete-plus]: https://atom.io/packages/autocomplete-plus
 [language-ocaml]: https://atom.io/packages/language-ocaml
+[language-reason]: https://atom.io/packages/language-reason
 [ocaml-indent]: https://atom.io/packages/ocaml-indent
