@@ -152,7 +152,7 @@ module.exports =
       @positions.push
         file: editor.getPath()
         point: currentPoint
-      if file?
+      if file isnt editor.getPath()
         atom.workspace.open file,
           initialLine: point.row
           initialColumn: point.column
