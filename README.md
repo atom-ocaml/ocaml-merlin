@@ -38,7 +38,7 @@ No default keybindings are provided, except those compatible with the `symbols-v
 
 ## Installation
 
-This package requires [language-ocaml], [linter] and [ocamlmerlin]. For auto-indenting destructed patterns, [ocaml-indent] is needed. For Reason support, [language-reason] is needed.
+This package requires [language-ocaml], [linter] and [ocamlmerlin]. For auto-indenting destructed patterns, [ocaml-indent] is needed. For Reason support, [language-reason] is needed, and [reason-refmt] is recommended.
 
 ```sh
 apm install language-ocaml linter ocaml-indent
@@ -49,5 +49,6 @@ opam install merlin
 [linter]: https://atom.io/packages/linter
 [autocomplete-plus]: https://atom.io/packages/autocomplete-plus
 [language-ocaml]: https://atom.io/packages/language-ocaml
-[language-reason]: https://atom.io/packages/language-reason
 [ocaml-indent]: https://atom.io/packages/ocaml-indent
+[language-reason]: https://atom.io/packages/language-reason
+[reason-refmt]: https://atom.io/packages/reason-refmt
