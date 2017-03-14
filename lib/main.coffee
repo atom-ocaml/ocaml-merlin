@@ -252,20 +252,29 @@ module.exports =
 
   provideLinter: ->
     name: 'OCaml Merlin'
-    grammarScopes: (grammars.map (grammar) -> "source.#{grammar}")
     scope: 'file'
-    lintOnFly: atom.config.get 'ocaml-merlin.lintAsYouType'
+    lintsOnChange: atom.config.get 'ocaml-merlin.lintAsYouType'
+    grammarScopes: (grammars.map (grammar) -> "source.#{grammar}")
     lint: (editor) =>
       @merlin.errors @getBuffer(editor)
       .then (errors) ->
         errors.map ({range, type, message}) ->
-          severity = if type is 'warning' then 'warning' else 'error'
-          type: type[0].toUpperCase() + type[1..-1]
-          class: severity
-          text: message[0].toUpperCase() + message[1..-1]
-          filePath: editor.getPath()
-          range: range
-          severity: severity
+          lines = message.split '\n'
+          lines[0] = '    ' + lines[0][0].toUpperCase() + lines[0][1..-1]
+          if indent = lines[1]?.search /\S/
+            for i in [1..lines.length-1]
+              lines[i] = lines[i][indent-4..-1]
+          message = lines.join '\n'
+          location:
+            file: editor.getPath()
+            position: range
+          excerpt: if type is 'warning' then 'Warning' else type[0].toUpperCase() + type[1..-1] + ' error'
+          severity: if type is 'warning' then 'warning' else 'error'
+          description: message
+          solutions: if m = message.match /Hint: Did you mean (.*)\?/ then [
+            position: range
+            replaceWith: m[1]
+          ] else []
 
   consumeIndent: ({@indentRange}) ->
     Disposable => @indentRange = null
