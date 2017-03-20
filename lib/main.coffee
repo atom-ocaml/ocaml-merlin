@@ -262,19 +262,23 @@ module.exports =
           lines = message.split '\n'
           lines[0] = lines[0][0].toUpperCase() + lines[0][1..-1]
           if lines.length > 1
+            excerpt = type[0].toUpperCase() + type[1..-1]
             indent = lines[1..-1].reduce (indent, line) ->
               Math.min indent, line.search /\S|$/
             , Infinity
             for i in [1..lines.length-1]
               lines[i] = lines[i][indent..-1]
-          message = '```\n' + (lines.join '\n') + '```'
+            message = '```\n' + (lines.join '\n') + '```'
+          else
+            excerpt = lines[0]
+            message = null
           location:
             file: editor.getPath()
             position: range
-          excerpt: if type is 'warning' then 'Warning' else type[0].toUpperCase() + type[1..-1] + ' error'
+          excerpt: excerpt
           severity: if type is 'warning' then 'warning' else 'error'
           description: message
-          solutions: if m = message.match /Hint: Did you mean (.*)\?/ then [
+          solutions: if m = message?.match /Hint: Did you mean (.*)\?/ then [
             position: range
             replaceWith: m[1]
           ] else []
