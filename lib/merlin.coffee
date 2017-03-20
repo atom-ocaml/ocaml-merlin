@@ -161,9 +161,17 @@ module.exports = class Merlin
       @query buffer, ["errors"]
       .then (errors) =>
         errors.map ({start, end, type, message}) =>
+          lines = message.split '\n'
+          lines[0] = lines[0][0].toUpperCase() + lines[0][1..-1]
+          if lines.length > 1
+            indent = lines[1..-1].reduce (indent, line) ->
+              Math.min indent, line.search /\S|$/
+            , Infinity
+            for i in [1..lines.length-1]
+              lines[i] = lines[i][indent..-1]
           range: if start? and end? then @range start, end else null
           type: type
-          message: message
+          message: lines.join '\n'
 
   project: (buffer) ->
     @query buffer, ["project", "get"]
