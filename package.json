@@ -19,7 +19,7 @@
   "repository": "https://github.com/314eter/atom-ocaml-merlin",
   "license": "MIT",
   "engines": {
-    "atom": ">=1.0.0 <2.0.0"
+    "atom": ">=1.0.0 <1.14.0"
   },
   "dependencies": {
     "etch": "^0.9.5"
