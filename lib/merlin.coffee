@@ -169,7 +169,7 @@ module.exports = class Merlin
             , Infinity
             for i in [1..lines.length-1]
               lines[i] = lines[i][indent..-1]
-          range: if start? and end? then @range start, end else null
+          range: if start? and end? then @range start, end else [[0, 0], [0, 0]]
           type: type
           message: lines.join '\n'
 
