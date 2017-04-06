@@ -42,7 +42,8 @@ module.exports =
     .join ', '
 
     @subscriptions.add atom.commands.add target,
-      'ocaml-merlin:show-type': => @showType()
+      'ocaml-merlin:show-type': => @toggleType()
+      'ocaml-merlin:toggle-type': => @toggleType()
       'ocaml-merlin:shrink-type': => @shrinkType()
       'ocaml-merlin:expand-type': => @expandType()
       'ocaml-merlin:close-bubble': => @closeType()
@@ -97,15 +98,18 @@ module.exports =
   getBuffer: (editor) ->
     @buffers[editor.getBuffer().getId()]
 
-  showType: ->
+  toggleType: ->
     return unless editor = atom.workspace.getActiveTextEditor()
-    @typeViews[editor.id]?.destroy()
-    @merlin.type @getBuffer(editor), editor.getCursorBufferPosition()
-    .then (typeList) =>
-      return unless typeList.length
-      typeView = new TypeView typeList, editor
-      @latestType = typeView.show()
-      @typeViews[editor.id] = typeView
+    if @typeViews[editor.id]?.marker?.isValid()
+      @typeViews[editor.id].destroy()
+      delete @typeViews[editor.id]
+    else
+      @merlin.type @getBuffer(editor), editor.getCursorBufferPosition()
+      .then (typeList) =>
+        return unless typeList.length
+        typeView = new TypeView typeList, editor
+        @latestType = typeView.show()
+        @typeViews[editor.id] = typeView
 
   shrinkType: ->
     return unless editor = atom.workspace.getActiveTextEditor()
