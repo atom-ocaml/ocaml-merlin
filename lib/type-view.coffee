@@ -1,3 +1,7 @@
+{TextEditor} = require 'atom'
+etch = require 'etch'
+$ = etch.dom
+
 module.exports = class TypeView
   @typeList: null
   @typeIndex: null
@@ -9,17 +13,40 @@ module.exports = class TypeView
 
   constructor: (@typeList, @editor) ->
     @typeIndex = 0
+    etch.initialize this
+    @refs.editor.element.removeAttribute 'tabindex'
+
+  render: ->
+    $.div
+      class: 'ocaml-merlin-type',
+      $ TextEditor,
+        ref: 'editor'
+        mini: true
+        grammar: atom.workspace.grammarRegistry.grammarForScopeName 'source.ocaml'
+        autoHeight: true
+        autoWidth: true
+
+  update: ->
+    etch.update this
 
   show: ->
     @destroy()
     {range, type} = @typeList[@typeIndex]
+    @refs.editor.setText type
     @marker = @editor.markBufferRange range
     @editor.decorateMarker @marker,
-      type: 'overlay'
-      item: @getBubble type
+      if range.isSingleLine()
+        type: 'overlay'
+        item: @element
+        position: 'tail'
+        class: 'ocaml-merlin'
+      else
+        type: 'block'
+        item: @element
+        position: 'after'
     @editor.decorateMarker @marker,
       type: 'highlight'
-      class: 'ocaml-merlin-highlight'
+      class: 'ocaml-merlin'
     @subscription = @editor.onDidChangeCursorPosition => @destroy()
     type
 
@@ -33,15 +60,8 @@ module.exports = class TypeView
     @typeIndex -= 1
     @show()
 
-  getBubble: (type) ->
-    bubble = document.createElement 'div'
-    bubble.id = 'ocaml-merlin-bubble'
-    bubble.className = 'transparent'
-    bubble.textContent = type
-    bubble.addEventListener 'keydown', ({keyCode}) =>
-      @destroy() if keyCode is 27
-    bubble
-
   destroy: ->
+    # etch.destroy this
+    # .then =>
     @marker?.destroy()
     @subscription?.dispose()

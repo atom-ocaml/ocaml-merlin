@@ -1,17 +1,29 @@
 @import "ui-variables";
 
-@space: 4px;
-
-.ocaml-merlin-highlight .region {
-  border-bottom: 1px dashed @background-color-info;
+.highlight.ocaml-merlin .region {
+  border-bottom: 1px solid @background-color-info;
 }
 
-#ocaml-merlin-bubble {
-  color: darken(@text-color-info, 40%);
-  white-space: pre-wrap;
-  background-color: fade(lighten(@background-color-info, 10%), 90%);
-  border-radius: 0 @component-border-radius @component-border-radius @component-border-radius;
-  padding: @space 2*@space;
-  margin-top: @space;
-  box-shadow: 2px 2px 2px @base-border-color;
+atom-overlay.ocaml-merlin {
+  z-index: 12;
+}
+
+.ocaml-merlin-type {
+  padding: 0.75rem;
+  box-shadow: 2px 2px 2px darken(@overlay-background-color, 4%);
+  border-radius: @component-border-radius;
+  border-left: 0.5rem solid @overlay-border-color;
+  background-color: @overlay-background-color;
+
+  atom-text-editor {
+    box-shadow: none !important;
+    padding: 0 !important;
+    background-color: @overlay-background-color !important;
+    border-color: transparent !important;
+    font-size: inherit !important;
+  }
+
+  .cursors {
+    display: none;
+  }
 }
