@@ -35,7 +35,7 @@ module.exports = class TypeView
     @refs.editor.setText type
     @marker = @editor.markBufferRange range
     @editor.decorateMarker @marker,
-      if range.isSingleLine()
+      if range.isSingleLine() and type.split('\n').length < 10
         type: 'overlay'
         item: @element
         position: 'tail'
