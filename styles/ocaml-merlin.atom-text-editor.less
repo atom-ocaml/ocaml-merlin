@@ -9,18 +9,18 @@ atom-overlay.ocaml-merlin {
 }
 
 .ocaml-merlin-type {
-  padding: 0.75rem;
-  box-shadow: 2px 2px 2px darken(@overlay-background-color, 4%);
-  border-radius: @component-border-radius;
-  border-left: 0.5rem solid @overlay-border-color;
   background-color: @overlay-background-color;
+  border-left: 0.5rem solid @overlay-border-color;
+  border-radius: @component-border-radius;
+  box-shadow: 2px 2px 2px darken(@overlay-background-color, 5%);
 
   atom-text-editor {
+    box-sizing: content-box;
+    padding: 0.75rem !important;
     box-shadow: none !important;
-    padding: 0 !important;
-    background-color: @overlay-background-color !important;
-    border-color: transparent !important;
+    border: none !important;
     font-size: inherit !important;
+    background-color: @overlay-background-color !important;
   }
 
   .cursors {
