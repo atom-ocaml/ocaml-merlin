@@ -260,7 +260,7 @@ module.exports =
     lintsOnChange: atom.config.get 'ocaml-merlin.lintAsYouType'
     grammarScopes: (grammars.map (grammar) -> "source.#{grammar}")
     lint: (editor) =>
-      return unless buffer = @getBuffer(editor)
+      return [] unless buffer = @getBuffer(editor)
       @merlin.errors buffer
       .then (errors) ->
         errors.map ({range, type, message}) ->
