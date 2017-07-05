@@ -25,7 +25,6 @@ No default keybindings are provided, except those compatible with the `symbols-v
 | `ocaml-merlin:toggle-type`             | Toggle type of expression under cursor |                             |                         |
 | `ocaml-merlin:shrink-type`             | Shrink the expression                  |                             |                         |
 | `ocaml-merlin:expand-type`             | Expand the expression                  |                             |                         |
-| `ocaml-merlin:toggle-type`             | Toggle the type bubble                 |                             |                         |
 | `ocaml-merlin:destruct`                | Destruct expression under cursor       |                             |                         |
 | `ocaml-merlin:next-occurrence`         | Find next occurrence of expression     |                             |                         |
 | `ocaml-merlin:previous-occurrence`     | Find previous occurrence of expression |                             |                         |
