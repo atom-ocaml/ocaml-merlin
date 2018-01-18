@@ -96,7 +96,11 @@ module.exports =
     @buffers[textBuffer.getId()]?.destroy()
 
   getBuffer: (editor) ->
-    @buffers[editor.getBuffer().getId()]
+    textBuffer = editor.getBuffer()
+    buffer = @buffers[textBuffer.getId()]
+    return buffer if buffer?
+    @addBuffer textBuffer
+    @buffers[textBuffer.getId()]
 
   toggleType: ->
     return unless editor = atom.workspace.getActiveTextEditor()
