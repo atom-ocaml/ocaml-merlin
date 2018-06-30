@@ -1,6 +1,8 @@
 {CompositeDisposable, Disposable} = require 'atom'
 
-grammars = ['ocaml', 'ocamllex', 'ocamlyacc', 'reason']
+languages = ['ocaml', 'ocamllex', 'ocamlyacc', 'reason']
+scopes = ['ocaml'].concat languages.map (language) -> "source.#{language}"
+selectors = languages.map (language) -> ".source.#{language}"
 
 Merlin = null
 Buffer = null
@@ -37,8 +39,8 @@ module.exports =
     @subscriptions.add atom.config.onDidChange 'ocaml-merlin.merlinPath', =>
       @restartMerlin()
 
-    target = grammars.map (grammar) ->
-      "atom-text-editor[data-grammar='source #{grammar}']"
+    target = scopes.map (scope) ->
+      "atom-text-editor[data-grammar='#{scope.replace /\./g, ' '}']"
     .join ', '
 
     @subscriptions.add atom.commands.add target,
@@ -61,7 +63,7 @@ module.exports =
 
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
       @subscriptions.add editor.observeGrammar (grammar) =>
-        if (grammars.map (grammar) -> "source.#{grammar}").includes grammar.scopeName
+        if scopes.includes grammar.scopeName
           @addBuffer editor.getBuffer()
         else
           @removeBuffer editor.getBuffer()
@@ -236,7 +238,7 @@ module.exports =
       "#": "constant"
       "Exn": "keyword"
       "Class": "class"
-    selector: (grammars.map (grammar) -> ".source.#{grammar}").join ', '
+    selector: selectors.join ', '
     getSuggestions: ({editor, bufferPosition, activatedManually}) =>
       prefix = @getPrefix editor, bufferPosition
       return [] if prefix.length < (if activatedManually then 1 else minimumWordLength)
@@ -255,14 +257,14 @@ module.exports =
           leftLabel: kind
           rightLabel: desc
           description: if info.length then info else desc
-    disableForSelector: (grammars.map (grammar) -> ".source.#{grammar} .comment").join ', '
+    disableForSelector: (selectors.map (selector) -> selector + " .comment").join ', '
     inclusionPriority: 1
 
   provideLinter: ->
     name: 'OCaml Merlin'
     scope: 'file'
     lintsOnChange: atom.config.get 'ocaml-merlin.lintAsYouType'
-    grammarScopes: (grammars.map (grammar) -> "source.#{grammar}")
+    grammarScopes: scopes
     lint: (editor) =>
       return [] unless buffer = @getBuffer(editor)
       @merlin.errors buffer
