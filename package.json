@@ -16,7 +16,7 @@
     "language-reason:grammar-used",
     "nuclide-language-reason:grammar-used"
   ],
-  "repository": "https://github.com/314eter/atom-ocaml-merlin",
+  "repository": "https://github.com/atom-ocaml/ocaml-merlin",
   "license": "MIT",
   "engines": {
     "atom": ">=1.14.0 <2.0.0"

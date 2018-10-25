@@ -2,6 +2,8 @@
 
 _Use [ocamlmerlin] to autocomplete, lint, refactor and navigate your OCaml/Reason code in Atom._
 
+**Note: Although this package is still working, [ide-reason] provides better OCaml support.**
+
 
 ## Features
 
@@ -52,3 +54,4 @@ opam install merlin
 [ocaml-indent]: https://atom.io/packages/ocaml-indent
 [language-reason]: https://atom.io/packages/language-reason
 [reason-refmt]: https://atom.io/packages/reason-refmt
+[ide-reason]: https://atom.io/packages/ide-reason
