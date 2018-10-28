@@ -282,4 +282,4 @@ module.exports =
           ] else []
 
   consumeIndent: ({@indentRange}) ->
-    Disposable => @indentRange = null
+    new Disposable => @indentRange = null
